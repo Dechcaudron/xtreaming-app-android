@@ -2,7 +2,7 @@ package com.dechcaudron.xtreaming.view.presenter;
 
 import com.dechcaudron.xtreaming.controller.RepositoryController;
 import com.dechcaudron.xtreaming.model.Repository;
-import com.dechcaudron.xtreaming.view.fragment.IRepositoriesFragmentPresenter;
+import com.dechcaudron.xtreaming.view.fragment.repositoriesFragment.IRepositoriesFragmentPresenter;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class RepositoriesFragmentPresenter implements IRepositoriesFragmentPrese
     }
 
     @Override
-    public void showAddedRepositories() {
+    public void showLinkedRepositories() {
         RepositoryController.fetchLinkedRepositories(this);
     }
 

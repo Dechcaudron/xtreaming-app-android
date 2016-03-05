@@ -2,7 +2,7 @@ package com.dechcaudron.xtreaming.view.activity;
 
 import android.os.Bundle;
 
-import com.dechcaudron.xtreaming.view.fragment.RepositoriesFragment;
+import com.dechcaudron.xtreaming.view.fragment.repositoriesFragment.RepositoriesFragment;
 import com.dechcaudron.xtreaming.view.fragment.WelcomeFragment;
 
 import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
