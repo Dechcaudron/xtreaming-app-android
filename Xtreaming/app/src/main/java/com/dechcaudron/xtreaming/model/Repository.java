@@ -1,16 +1,17 @@
 package com.dechcaudron.xtreaming.model;
 
+import com.dechcaudron.xtreaming.repositoryInterface.IRepositoryAuthToken;
+
 public class Repository
 {
-
     private final int repoType;
     private final String domainUrl;
     private final int port;
     private final boolean requireSSL;
     private final String username;
-    private final String authenticationToken;
+    private final IRepositoryAuthToken authenticationToken;
 
-    public Repository(int repoType, String domainUrl, int port, boolean requireSSL, String username, String authenticationToken)
+    public Repository(int repoType, String domainUrl, int port, boolean requireSSL, String username, IRepositoryAuthToken authenticationToken)
     {
 
         this.repoType = repoType;
@@ -46,7 +47,7 @@ public class Repository
         return username;
     }
 
-    public String getAuthenticationToken()
+    public IRepositoryAuthToken getAuthenticationToken()
     {
         return authenticationToken;
     }

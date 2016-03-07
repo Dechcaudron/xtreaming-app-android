@@ -4,4 +4,5 @@
     <string name="invalid_repo_type">Invalid repository type</string>
     <string name="unreachable_repository">Unreachable repository</string>
     <string name="add_repo_error">Error adding the repository</string>
+    <string name="get_artists_error">Error retrieving artists</string>
 </resources>

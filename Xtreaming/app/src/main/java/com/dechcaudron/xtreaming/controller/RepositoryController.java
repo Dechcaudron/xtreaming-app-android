@@ -59,8 +59,8 @@ public abstract class RepositoryController
 
                     try
                     {
-                        repoType = getRepoType(repoTypeCode);
-                    }catch (IllegalArgumentException e)
+                        repoType = RepoTypes.getRepoType(repoTypeCode);
+                    } catch (IllegalArgumentException e)
                     {
                         LogController.LOGE(TAG, "Bad repoTypeCode supplied", e);
                         listener.onInvalidRepository(R.string.invalid_repo_type);
@@ -76,7 +76,7 @@ public abstract class RepositoryController
                             listener.onInvalidCredentials();
                         else
                         {
-                            Repository repository = new Repository(repoTypeCode, domain, port, false, username, authToken.getSerialized());
+                            Repository repository = new Repository(repoTypeCode, domain, port, false, username, authToken);
                             if (saveNewRepository(repository))
                             {
                                 listener.onRepositoryAdded(repository);
@@ -86,25 +86,13 @@ public abstract class RepositoryController
                             }
                         }
 
-                    } catch (RepositoryInterfaceException e)
+                    } catch (Exception e)
                     {
                         listener.onUnreachableRepository(R.string.unreachable_repository);
                     }
 
                 }
             }).start();
-        }
-    }
-
-    private static RepoTypes getRepoType(int repoTypeCode) throws IllegalArgumentException
-    {
-        switch (repoTypeCode)
-        {
-            case 0:
-                return RepoTypes.Koel;
-
-            default:
-                throw new IllegalArgumentException("Invalid repoTypeCode " + repoTypeCode);
         }
     }
 

@@ -3,6 +3,9 @@ package com.dechcaudron.xtreaming.dataSources;
 import com.dechcaudron.xtreaming.BaseApplication;
 import com.dechcaudron.xtreaming.controller.LogController;
 import com.dechcaudron.xtreaming.model.Repository;
+import com.dechcaudron.xtreaming.repositoryInterface.IRepositoryAuthToken;
+import com.dechcaudron.xtreaming.repositoryInterface.RepoTypes;
+import com.dechcaudron.xtreaming.repositoryInterface.RepositoryAuthTokenFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +125,9 @@ public class RepositoriesDataSource
 
         try
         {
-            return new Repository(Integer.parseInt(repoData[0]), repoData[1], Integer.parseInt(repoData[2]), repoData[3].equals("1"), repoData[4], repoData[5]);
+            IRepositoryAuthToken authToken = RepositoryAuthTokenFactory.decodeAuthToken(RepoTypes.getRepoType(Integer.parseInt(repoData[0])), repoData[5]);
+
+            return new Repository(Integer.parseInt(repoData[0]), repoData[1], Integer.parseInt(repoData[2]), repoData[3].equals("1"), repoData[4], authToken);
         } catch (Exception e)
         {
             LogController.LOGE(TAG, "Failed deserializing repository from " + serializedRepoString + " returning null", e);
