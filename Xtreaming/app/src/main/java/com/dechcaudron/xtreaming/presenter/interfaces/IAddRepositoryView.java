@@ -1,4 +1,4 @@
-package com.dechcaudron.xtreaming.view.presenter;
+package com.dechcaudron.xtreaming.presenter.interfaces;
 
 public interface IAddRepositoryView {
     void onRepositoryAdded();

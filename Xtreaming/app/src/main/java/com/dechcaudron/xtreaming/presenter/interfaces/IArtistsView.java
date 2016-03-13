@@ -1,10 +1,10 @@
-package com.dechcaudron.xtreaming.view.presenter;
+package com.dechcaudron.xtreaming.presenter.interfaces;
 
 import com.dechcaudron.xtreaming.model.Artist;
 
 import java.util.List;
 
-public interface IArtistsView
+public interface IArtistsView extends IActivityStarterView
 {
     void displayArtists(List<Artist> artists);
 

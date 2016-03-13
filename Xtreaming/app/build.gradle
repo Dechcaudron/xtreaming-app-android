@@ -25,7 +25,7 @@ dependencies {
     //testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:design:23.2.0'
-    compile 'com.github.Dechcaudron:koel-java-api:-SNAPSHOT'
+    compile 'com.github.Dechcaudron:koel-java-api:01631ae90b'
     compile 'com.github.Dechcaudron:MaterialNavigationDrawerModule:-SNAPSHOT'
     //https://github.com/futuresimple/android-floating-action-button
     compile 'com.getbase:floatingactionbutton:1.10.1'

@@ -38,9 +38,9 @@ public class ArtistsDataSource
     {
         try
         {
-            RepositoryInterface repositoryInterface = RepositoryInterfaceFactory.getInterface(RepoTypes.getRepoType(repository.getRepoType()));
-            return repositoryInterface.getArtists(repository.getDomainURL(), repository.getPort(), repository.requiresSSL(), repository.getAuthenticationToken());
-            
+            RepositoryInterface repositoryInterface = RepositoryInterfaceFactory.getInterface(RepoTypes.getRepoType(repository.getRepoTypeCode()));
+            return repositoryInterface.getArtists(repository);
+
         } catch (Exception e)
         {
             LogController.LOGE(TAG, "Could not get artists from server", e);

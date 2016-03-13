@@ -1,4 +1,4 @@
-package com.dechcaudron.xtreaming.view.presenter;
+package com.dechcaudron.xtreaming.presenter.interfaces;
 
 import com.dechcaudron.xtreaming.model.Repository;
 

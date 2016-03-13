@@ -5,4 +5,5 @@
     <string name="unreachable_repository">Unreachable repository</string>
     <string name="add_repo_error">Error adding the repository</string>
     <string name="get_artists_error">Error retrieving artists</string>
+    <string name="get_albums_error">Error retrieving albums</string>
 </resources>

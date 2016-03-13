@@ -14,7 +14,7 @@ public class NavigationDrawerActivity extends MaterialNavigationDrawer
     @Override
     public void init(Bundle bundle)
     {
-        addSection(newSection("Section 1", new WelcomeFragment()));
+        addSection(newSection("Welcome", new WelcomeFragment()));
         addSection(newSection("Repositories", new RepositoriesFragment()));
         addSection(newSection("Artists", new ArtistsFragment()));
     }

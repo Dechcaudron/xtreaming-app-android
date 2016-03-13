@@ -6,22 +6,22 @@ import android.support.annotation.Nullable;
 import com.dechcaudron.koel.api.exceptions.KoelApiException;
 import com.dechcaudron.koel.api.exceptions.KoelAuthenticationException;
 import com.dechcaudron.koel.api.objects.KoelAuthenticationToken;
+import com.dechcaudron.koel.api.objects.MediaInfo;
 import com.dechcaudron.koel.api.utils.AuthenticationUtils;
 import com.dechcaudron.koel.api.utils.MediaUtils;
 import com.dechcaudron.xtreaming.controller.LogController;
+import com.dechcaudron.xtreaming.model.Album;
 import com.dechcaudron.xtreaming.model.Artist;
+import com.dechcaudron.xtreaming.model.Repository;
 import com.dechcaudron.xtreaming.repositoryInterface.IRepositoryAuthToken;
 import com.dechcaudron.xtreaming.repositoryInterface.RepositoryInterface;
 import com.dechcaudron.xtreaming.repositoryInterface.RepositoryInterfaceException;
-
-import org.json.JSONArray;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class KoelRepositoryInterface implements RepositoryInterface
 {
@@ -53,34 +53,68 @@ public class KoelRepositoryInterface implements RepositoryInterface
     }
 
     @Override
-    public List<Artist> getArtists(String domain, int port, boolean useHttps, IRepositoryAuthToken authToken) throws RepositoryInterfaceException, IOException
+    public List<Artist> getArtists(Repository repository) throws RepositoryInterfaceException, IOException
     {
-        URL serverUrl;
+        List<com.dechcaudron.koel.api.objects.Artist> apiArtists = getMediaInfo(repository).getArtists();
 
+        List<Artist> artists = new ArrayList<>(apiArtists.size());
+
+        for (com.dechcaudron.koel.api.objects.Artist apiArtist : apiArtists)
+        {
+            artists.add(new Artist(apiArtist.getName(), repository.getRepoLocalId()));
+        }
+
+        return artists;
+    }
+
+    @Override
+    public List<Album> getAlbums(Repository repository) throws RepositoryInterfaceException, IOException
+    {
+        List<com.dechcaudron.koel.api.objects.Album> apiAlbums = getMediaInfo(repository).getAllAlbums();
+
+        List<Album> albums = new ArrayList<>(apiAlbums.size());
+
+        for (com.dechcaudron.koel.api.objects.Album apiAlbum : apiAlbums)
+        {
+            albums.add(new Album(repository.getRepoLocalId(), apiAlbum.getArtistName(), apiAlbum.getName()));
+        }
+
+        return albums;
+    }
+
+    @Override
+    public List<Album> getAlbums(Repository repository, String artistName) throws RepositoryInterfaceException, IOException
+    {
+        List<Album> repoAlbums = getAlbums(repository);
+
+        List<Album> artistAlbums = new ArrayList<>();
+
+        for (Album album : repoAlbums)
+        {
+            if (album.getArtistName().equals(artistName))
+                artistAlbums.add(album);
+        }
+
+        return artistAlbums;
+    }
+
+    private MediaInfo getMediaInfo(Repository repository) throws IOException, RepositoryInterfaceException
+    {
         try
         {
-            serverUrl = buildURL(domain, port, useHttps);
-            List<com.dechcaudron.koel.api.objects.Artist> apiArtists = MediaUtils.getMediaInfo(serverUrl, new KoelAuthenticationToken(authToken.getSerialized())).getArtists();
-
-            List<Artist> artists = new ArrayList<>(apiArtists.size());
-
-            for (com.dechcaudron.koel.api.objects.Artist apiArtist : apiArtists)
-            {
-                artists.add(new Artist(apiArtist.getName()));
-            }
-
-            return artists;
+            URL serverURL = buildURL(repository.getDomainURL(), repository.getPort(), repository.requiresSSL());
+            return MediaUtils.getMediaInfo(serverURL, new KoelAuthenticationToken(repository.getAuthenticationToken().getSerialized()));
 
         } catch (MalformedURLException e)
         {
-            LogController.LOGE(TAG, "Malformed URL for domain " + domain, e);
+            LogController.LOGE(TAG, "Malformed URL for domain " + repository.getDomainURL(), e);
 
         } catch (KoelApiException e)
         {
-            LogController.LOGE(TAG, "", e);
+            LogController.LOGE(TAG, "API exception", e);
         }
 
-        throw new RepositoryInterfaceException("Could not fetch artists");
+        throw new RepositoryInterfaceException("Could not get media info");
     }
 
     private URL buildURL(String domain, int port, boolean useHttps) throws MalformedURLException

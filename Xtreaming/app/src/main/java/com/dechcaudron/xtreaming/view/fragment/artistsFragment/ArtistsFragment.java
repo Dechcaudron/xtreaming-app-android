@@ -2,30 +2,34 @@ package com.dechcaudron.xtreaming.view.fragment.artistsFragment;
 
 import android.app.ListFragment;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.dechcaudron.xtreaming.controller.LogController;
 import com.dechcaudron.xtreaming.model.Artist;
-import com.dechcaudron.xtreaming.view.presenter.ArtistsViewPresenter;
-import com.dechcaudron.xtreaming.view.presenter.IArtistsView;
+import com.dechcaudron.xtreaming.presenter.ArtistsViewPresenter;
+import com.dechcaudron.xtreaming.presenter.interfaces.IArtistsView;
+import com.dechcaudron.xtreaming.view.interfaces.IArtistsViewPresenter;
 
 import java.util.List;
 
-public class ArtistsFragment extends ListFragment implements IArtistsView
+public class ArtistsFragment extends ListFragment implements IArtistsView, AdapterView.OnItemClickListener
 {
     private static final String TAG = LogController.makeTag(ArtistsFragment.class);
     IArtistsViewPresenter presenter;
-    ArrayAdapter<Artist> arrayAdapter;
+    ArrayAdapter<Artist> adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        presenter = new ArtistsViewPresenter(this);
-        arrayAdapter = new ArtistsListAdapter(getActivity());
-        setListAdapter(arrayAdapter);
+        adapter = new ArtistsListAdapter(getActivity());
+        setListAdapter(adapter);
+
+        presenter = new ArtistsViewPresenter(this, getActivity());
     }
 
     @Override
@@ -33,6 +37,7 @@ public class ArtistsFragment extends ListFragment implements IArtistsView
     {
         super.onStart();
 
+        getListView().setOnItemClickListener(this);
         presenter.fetchArtists();
     }
 
@@ -40,13 +45,14 @@ public class ArtistsFragment extends ListFragment implements IArtistsView
     public void displayArtists(final List<Artist> artists)
     {
         LogController.LOGD(TAG, "Displaying " + artists.size() + " artists");
+
         getActivity().runOnUiThread(new Runnable()
         {
             @Override
             public void run()
             {
-                arrayAdapter.clear();
-                arrayAdapter.addAll(artists);
+                adapter.clear();
+                adapter.addAll(artists);
             }
         });
     }
@@ -62,5 +68,11 @@ public class ArtistsFragment extends ListFragment implements IArtistsView
                 Toast.makeText(getActivity(), errorResId, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    {
+        presenter.openArtist(adapter.getItem(position));
     }
 }

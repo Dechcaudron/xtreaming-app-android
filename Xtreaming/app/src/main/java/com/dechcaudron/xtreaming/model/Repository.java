@@ -4,32 +4,38 @@ import com.dechcaudron.xtreaming.repositoryInterface.IRepositoryAuthToken;
 
 public class Repository
 {
-    private final int repoType;
-    private final String domainUrl;
+    private final int repoLocalId;
+    private final int repoTypeCode;
+    private final String domainURL;
     private final int port;
     private final boolean requireSSL;
     private final String username;
     private final IRepositoryAuthToken authenticationToken;
 
-    public Repository(int repoType, String domainUrl, int port, boolean requireSSL, String username, IRepositoryAuthToken authenticationToken)
+    public Repository(int repoLocalId, int repoTypeCode, String domainURL, int port, boolean requireSSL, String username, IRepositoryAuthToken authenticationToken)
     {
-
-        this.repoType = repoType;
-        this.domainUrl = domainUrl;
+        this.repoLocalId = repoLocalId;
+        this.repoTypeCode = repoTypeCode;
+        this.domainURL = domainURL;
         this.port = port;
         this.requireSSL = requireSSL;
         this.username = username;
         this.authenticationToken = authenticationToken;
     }
 
-    public int getRepoType()
+    public int getRepoLocalId()
     {
-        return repoType;
+        return repoLocalId;
+    }
+
+    public int getRepoTypeCode()
+    {
+        return repoTypeCode;
     }
 
     public String getDomainURL()
     {
-        return domainUrl;
+        return domainURL;
     }
 
     public int getPort()

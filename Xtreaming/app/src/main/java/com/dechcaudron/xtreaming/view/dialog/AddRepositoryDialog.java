@@ -4,13 +4,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dechcaudron.xtreaming.R;
 import com.dechcaudron.xtreaming.controller.LogController;
-import com.dechcaudron.xtreaming.view.presenter.AddRepositoryViewPresenter;
-import com.dechcaudron.xtreaming.view.presenter.IAddRepositoryView;
+import com.dechcaudron.xtreaming.presenter.AddRepositoryViewPresenter;
+import com.dechcaudron.xtreaming.presenter.interfaces.IAddRepositoryView;
+import com.dechcaudron.xtreaming.view.interfaces.IAddRepositoryViewPresenter;
 
 public class AddRepositoryDialog extends Dialog implements View.OnClickListener, IAddRepositoryView
 {
@@ -21,8 +23,11 @@ public class AddRepositoryDialog extends Dialog implements View.OnClickListener,
     Activity activity;
 
     EditText domainEditText;
+    EditText portEditText;
+    CheckBox useHttpsCheckBox;
     EditText usernameEditText;
     EditText passwordEditText;
+
 
     Button addButton;
     Button cancelButton;
@@ -37,6 +42,8 @@ public class AddRepositoryDialog extends Dialog implements View.OnClickListener,
         setCancelable(true);
 
         domainEditText = (EditText) findViewById(R.id.domainEditText);
+        portEditText = (EditText) findViewById(R.id.portEditText);
+        useHttpsCheckBox = (CheckBox) findViewById(R.id.useHttpsCheckBox);
         usernameEditText = (EditText) findViewById(R.id.usernameEditText);
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 
@@ -107,7 +114,8 @@ public class AddRepositoryDialog extends Dialog implements View.OnClickListener,
         {
             case R.id.addButton:
                 //0 goes for Koel, no need to add anything else by now
-                presenter.addRepository(0, domainEditText.getText().toString().trim(), usernameEditText.getText().toString().trim(), passwordEditText.getText().toString());
+                presenter.addRepository(0, domainEditText.getText().toString().trim(), Integer.parseInt(portEditText.getText().toString()), useHttpsCheckBox.isChecked(),
+                        usernameEditText.getText().toString().trim(), passwordEditText.getText().toString());
                 break;
 
             case R.id.cancelButton:

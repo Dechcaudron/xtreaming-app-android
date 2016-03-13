@@ -45,7 +45,7 @@ public class RepositoriesDataSource
      *      REPO1_---_REPO2_---_REPO3
      *
      * Where each repository has the following fields stored as follows
-     *      REPOTYPE___DOMAINURL___PORT___REQUIRESSL(0,1)___USERNAME___AUTHENTICATIONTOKEN
+     *      REPOLOCALID___REPOTYPE___DOMAINURL___PORT___REQUIRESSL(0,1)___USERNAME___AUTHENTICATIONTOKEN
      */
 
     private boolean storeRepositoryInPreferences(Repository repository)
@@ -71,7 +71,9 @@ public class RepositoriesDataSource
     {
         StringBuilder builder = new StringBuilder();
 
-        builder.append(repository.getRepoType());
+        builder.append(repository.getRepoLocalId());
+        builder.append(SERIALIZED_REPOSITORY_FIELD_SEPARATION_STRING);
+        builder.append(repository.getRepoTypeCode());
         builder.append(SERIALIZED_REPOSITORY_FIELD_SEPARATION_STRING);
         builder.append(repository.getDomainURL());
         builder.append(SERIALIZED_REPOSITORY_FIELD_SEPARATION_STRING);
@@ -81,7 +83,9 @@ public class RepositoriesDataSource
         builder.append(SERIALIZED_REPOSITORY_FIELD_SEPARATION_STRING);
         builder.append(repository.getUsername());
         builder.append(SERIALIZED_REPOSITORY_FIELD_SEPARATION_STRING);
-        builder.append(repository.getAuthenticationToken());
+        builder.append(repository.getAuthenticationToken().getSerialized());
+
+        //LogController.LOGD(TAG, "Repo serialized as " + builder.toString());
 
         return builder.toString();
     }
@@ -125,9 +129,9 @@ public class RepositoriesDataSource
 
         try
         {
-            IRepositoryAuthToken authToken = RepositoryAuthTokenFactory.decodeAuthToken(RepoTypes.getRepoType(Integer.parseInt(repoData[0])), repoData[5]);
+            IRepositoryAuthToken authToken = RepositoryAuthTokenFactory.decodeAuthToken(RepoTypes.getRepoType(Integer.parseInt(repoData[1])), repoData[6]);
 
-            return new Repository(Integer.parseInt(repoData[0]), repoData[1], Integer.parseInt(repoData[2]), repoData[3].equals("1"), repoData[4], authToken);
+            return new Repository(Integer.parseInt(repoData[0]), Integer.parseInt(repoData[1]), repoData[2], Integer.parseInt(repoData[3]), repoData[4].equals("1"), repoData[5], authToken);
         } catch (Exception e)
         {
             LogController.LOGE(TAG, "Failed deserializing repository from " + serializedRepoString + " returning null", e);

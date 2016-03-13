@@ -1,9 +1,10 @@
-package com.dechcaudron.xtreaming.view.presenter;
+package com.dechcaudron.xtreaming.presenter;
 
 import com.dechcaudron.xtreaming.controller.LogController;
 import com.dechcaudron.xtreaming.controller.RepositoryController;
 import com.dechcaudron.xtreaming.model.Repository;
-import com.dechcaudron.xtreaming.view.dialog.IAddRepositoryViewPresenter;
+import com.dechcaudron.xtreaming.presenter.interfaces.IAddRepositoryView;
+import com.dechcaudron.xtreaming.view.interfaces.IAddRepositoryViewPresenter;
 
 public class AddRepositoryViewPresenter implements IAddRepositoryViewPresenter, RepositoryController.AddRepositoryListener
 {
@@ -17,10 +18,10 @@ public class AddRepositoryViewPresenter implements IAddRepositoryViewPresenter, 
     }
 
     @Override
-    public void addRepository(int repoType, String domain, String username, String password)
+    public void addRepository(int repoType, String domain, int port, boolean requireSSL, String username, String password)
     {
         view.setBusy(true);
-        RepositoryController.addRepository(this, repoType, domain, 8000, username, password);
+        RepositoryController.addRepository(this, repoType, domain, port, requireSSL, username, password);
     }
 
     @Override

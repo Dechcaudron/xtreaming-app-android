@@ -1,6 +1,7 @@
 package com.dechcaudron.xtreaming.view.fragment.repositoriesFragment;
 
 import android.app.ListFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,29 +13,28 @@ import android.widget.Toast;
 import com.dechcaudron.xtreaming.R;
 import com.dechcaudron.xtreaming.controller.LogController;
 import com.dechcaudron.xtreaming.model.Repository;
+import com.dechcaudron.xtreaming.presenter.RepositoriesViewPresenter;
+import com.dechcaudron.xtreaming.presenter.interfaces.IRepositoriesView;
 import com.dechcaudron.xtreaming.view.dialog.AddRepositoryDialog;
-import com.dechcaudron.xtreaming.view.presenter.IRepositoriesView;
-import com.dechcaudron.xtreaming.view.presenter.RepositoriesFragmentPresenter;
+import com.dechcaudron.xtreaming.view.interfaces.IRepositoriesViewPresenter;
 
 import java.util.List;
 
-public class RepositoriesFragment extends ListFragment implements IRepositoriesView, View.OnClickListener
+public class RepositoriesFragment extends ListFragment implements IRepositoriesView, View.OnClickListener, DialogInterface.OnDismissListener
 {
-
     private static final String TAG = LogController.makeTag(RepositoriesFragment.class);
 
     ListView repositoriesListView;
     View addRepoButton;
-    RepositoriesListAdapter repositoriesListAdapter;
+    RepositoriesListAdapter adapter;
 
-    IRepositoriesFragmentPresenter presenter;
+    IRepositoriesViewPresenter presenter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         return inflater.inflate(R.layout.fragment_repostitories, container, false);
-
     }
 
     @Override
@@ -42,22 +42,22 @@ public class RepositoriesFragment extends ListFragment implements IRepositoriesV
     {
         super.onActivityCreated(savedInstanceState);
 
-        presenter = new RepositoriesFragmentPresenter(this);
-
         repositoriesListView = getListView();
-        repositoriesListAdapter = new RepositoriesListAdapter(getActivity());
-        repositoriesListView.setAdapter(repositoriesListAdapter);
+        adapter = new RepositoriesListAdapter(getActivity());
+        repositoriesListView.setAdapter(adapter);
 
         addRepoButton = getView().findViewById(R.id.addRepoButton);
 
         addRepoButton.setOnClickListener(this);
+
+        presenter = new RepositoriesViewPresenter(this);
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        presenter.showLinkedRepositories();
+        presenter.onResume();
     }
 
     @Override
@@ -68,9 +68,11 @@ public class RepositoriesFragment extends ListFragment implements IRepositoriesV
             @Override
             public void run()
             {
-                repositoriesListAdapter.setRepositories(repositories);
+                adapter.clear();
+                adapter.addAll(repositories);
             }
         });
+
     }
 
     @Override
@@ -101,9 +103,16 @@ public class RepositoriesFragment extends ListFragment implements IRepositoriesV
         }
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog)
+    {
+        presenter.onResume();
+    }
+
     private void showAddRepoDialog()
     {
         AddRepositoryDialog dialog = new AddRepositoryDialog(getActivity());
+        dialog.setOnDismissListener(this);
         dialog.show();
     }
 }
