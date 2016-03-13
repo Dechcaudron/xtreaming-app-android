@@ -5,10 +5,12 @@ import com.dechcaudron.xtreaming.controller.LogController;
 import com.dechcaudron.xtreaming.dataSources.AlbumsDataSource;
 import com.dechcaudron.xtreaming.dataSources.ArtistsDataSource;
 import com.dechcaudron.xtreaming.dataSources.RepositoriesDataSource;
+import com.dechcaudron.xtreaming.dataSources.SongsDataSource;
 import com.dechcaudron.xtreaming.exception.DataSourceException;
 import com.dechcaudron.xtreaming.model.Album;
 import com.dechcaudron.xtreaming.model.Artist;
 import com.dechcaudron.xtreaming.model.Repository;
+import com.dechcaudron.xtreaming.model.Song;
 
 import java.util.List;
 
@@ -19,12 +21,14 @@ public class DataController
     private final RepositoriesDataSource repositoriesDataSource;
     private final ArtistsDataSource artistsDataSource;
     private final AlbumsDataSource albumsDataSource;
+    private final SongsDataSource songsDataSource;
 
     public DataController()
     {
         repositoriesDataSource = new RepositoriesDataSource();
         artistsDataSource = new ArtistsDataSource();
         albumsDataSource = new AlbumsDataSource();
+        songsDataSource = new SongsDataSource();
     }
 
     public List<Repository> getLinkedRepositories()
@@ -103,6 +107,33 @@ public class DataController
                 {
                     LogController.LOGE(TAG, "Could not fetch albums", e);
                     listener.onAlbumsUnavailable(R.string.get_albums_error);
+                }
+            }
+        }).start();
+    }
+
+    public interface OnSongsAvailableListener
+    {
+        void onSongsAvailable(List<Song> songs);
+
+        void onSongsUnavailable(int errorResId);
+    }
+
+    public void fetchSongs(final int repoLocalId, final String artistName, final String albumName, final OnSongsAvailableListener listener)
+    {
+        LogController.LOGD(TAG, "Fetching songs from repo of id " + repoLocalId + " for artist " + artistName + " and album " + albumName);
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    listener.onSongsAvailable(songsDataSource.getSongs(getLinkedRepository(repoLocalId), artistName, albumName));
+                } catch (DataSourceException e)
+                {
+                    LogController.LOGE(TAG, "Could not fetch songs", e);
+                    listener.onSongsUnavailable(R.string.get_songs_error);
                 }
             }
         }).start();

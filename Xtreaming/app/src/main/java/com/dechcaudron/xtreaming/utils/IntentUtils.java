@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 public abstract class IntentUtils
 {
+    public static final int REPO_LOCAL_ID_UNSPECIFIED = 0;
+
     private static final String REPO_LOCAL_ID_INTENT_KEY = "REPO_LOCAL_ID_IK";
     private static final String ARTIST_INTENT_KEY = "ARTIST_IK";
     private static final String ALBUM_INTENT_KEY = "ALBUM_IK";
@@ -16,12 +18,12 @@ public abstract class IntentUtils
 
     public static int getSpecifiedRepoLocalId(Intent intent)
     {
-        return intent.getIntExtra(REPO_LOCAL_ID_INTENT_KEY, 0);
+        return intent.getIntExtra(REPO_LOCAL_ID_INTENT_KEY, REPO_LOCAL_ID_UNSPECIFIED);
     }
 
     public static int getSpecifiedRepoLocalId(Bundle bundle)
     {
-        return bundle.getInt(REPO_LOCAL_ID_INTENT_KEY, 0);
+        return bundle.getInt(REPO_LOCAL_ID_INTENT_KEY, REPO_LOCAL_ID_UNSPECIFIED);
     }
 
     public static void specifyArtist(Intent intent, String artistName)

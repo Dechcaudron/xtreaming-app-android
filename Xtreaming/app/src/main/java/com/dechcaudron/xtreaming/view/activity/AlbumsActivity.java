@@ -2,7 +2,8 @@ package com.dechcaudron.xtreaming.view.activity;
 
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -15,7 +16,7 @@ import com.dechcaudron.xtreaming.view.interfaces.IAlbumsViewPresenter;
 
 import java.util.List;
 
-public class AlbumsActivity extends ListActivity implements IAlbumsView
+public class AlbumsActivity extends ListActivity implements IAlbumsView, AdapterView.OnItemClickListener
 {
     private static final String TAG = LogController.makeTag(AlbumsActivity.class);
 
@@ -30,7 +31,20 @@ public class AlbumsActivity extends ListActivity implements IAlbumsView
         adapter = new ArrayAdapter<>(this, R.layout.simple_list_view_item);
         setListAdapter(adapter);
 
-        presenter = new AlbumsViewPresenter(this, getIntent().getExtras());
+        presenter = new AlbumsViewPresenter(this, getIntent().getExtras(), this);
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        getListView().setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    {
+        presenter.openAlbum(adapter.getItem(position));
     }
 
     @Override

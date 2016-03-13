@@ -1,16 +1,20 @@
 package com.dechcaudron.xtreaming.model;
 
-public class Album
+public class Song
 {
     private final int repoLocalId;
     private final String artistName;
+    private final String albumName;
     private final String name;
+    private final String id;
 
-    public Album(int repoLocalId, String artistName, String name)
+    public Song(int repoLocalId, String artistName, String albumName, String name, String id)
     {
         this.repoLocalId = repoLocalId;
         this.artistName = artistName;
+        this.albumName = albumName;
         this.name = name;
+        this.id = id;
     }
 
     public int getRepoLocalId()
@@ -21,6 +25,11 @@ public class Album
     public String getArtistName()
     {
         return artistName;
+    }
+
+    public String getAlbumName()
+    {
+        return albumName;
     }
 
     public String getName()

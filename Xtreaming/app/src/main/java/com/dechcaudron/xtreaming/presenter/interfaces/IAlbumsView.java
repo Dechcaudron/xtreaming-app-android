@@ -4,7 +4,7 @@ import com.dechcaudron.xtreaming.model.Album;
 
 import java.util.List;
 
-public interface IAlbumsView extends IActivityStarterView
+public interface IAlbumsView
 {
     void displayAlbums(List<Album> albums);
 

@@ -13,6 +13,7 @@ import com.dechcaudron.xtreaming.controller.LogController;
 import com.dechcaudron.xtreaming.model.Album;
 import com.dechcaudron.xtreaming.model.Artist;
 import com.dechcaudron.xtreaming.model.Repository;
+import com.dechcaudron.xtreaming.model.Song;
 import com.dechcaudron.xtreaming.repositoryInterface.IRepositoryAuthToken;
 import com.dechcaudron.xtreaming.repositoryInterface.RepositoryInterface;
 import com.dechcaudron.xtreaming.repositoryInterface.RepositoryInterfaceException;
@@ -96,6 +97,53 @@ public class KoelRepositoryInterface implements RepositoryInterface
         }
 
         return artistAlbums;
+    }
+
+    @Override
+    public List<Song> getSongs(Repository repository, String artistName, String albumName) throws RepositoryInterfaceException, IOException
+    {
+        List<Song> allSongs = getSongs(repository);
+
+        List<Song> albumSongs = new ArrayList<>();
+
+        for (Song song : allSongs)
+        {
+            if (song.getAlbumName().equals(albumName) && song.getArtistName().equals(artistName))
+                albumSongs.add(song);
+        }
+
+        return albumSongs;
+    }
+
+    @Override
+    public List<Song> getSongs(Repository repository, String artistName) throws RepositoryInterfaceException, IOException
+    {
+        List<Song> allSongs = getSongs(repository);
+
+        List<Song> artistSongs = new ArrayList<>();
+
+        for (Song song : allSongs)
+        {
+            if (song.getArtistName().equals(artistName))
+                artistSongs.add(song);
+        }
+
+        return artistSongs;
+    }
+
+    @Override
+    public List<Song> getSongs(Repository repository) throws RepositoryInterfaceException, IOException
+    {
+        List<com.dechcaudron.koel.api.objects.Song> apiSongs = getMediaInfo(repository).getAllSongs();
+        
+        List<Song> allSongs = new ArrayList<>(apiSongs.size());
+
+        for (com.dechcaudron.koel.api.objects.Song apiSong : apiSongs)
+        {
+            allSongs.add(new Song(repository.getRepoLocalId(), apiSong.getArtistName(), apiSong.getAlbumName(), apiSong.getTitle(), apiSong.getId()));
+        }
+
+        return allSongs;
     }
 
     private MediaInfo getMediaInfo(Repository repository) throws IOException, RepositoryInterfaceException
