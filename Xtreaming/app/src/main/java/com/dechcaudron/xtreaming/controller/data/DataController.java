@@ -18,12 +18,22 @@ public class DataController
 {
     private static final String TAG = LogController.makeTag(DataController.class);
 
+    private static DataController singleton;
+
     private final RepositoriesDataSource repositoriesDataSource;
     private final ArtistsDataSource artistsDataSource;
     private final AlbumsDataSource albumsDataSource;
     private final SongsDataSource songsDataSource;
 
-    public DataController()
+    public static DataController getSingleton()
+    {
+        if (singleton == null)
+            singleton = new DataController();
+
+        return singleton;
+    }
+
+    private DataController()
     {
         repositoriesDataSource = new RepositoriesDataSource();
         artistsDataSource = new ArtistsDataSource();
@@ -137,5 +147,10 @@ public class DataController
                 }
             }
         }).start();
+    }
+
+    public Song getSong(int repoLocalId, String songId) throws DataSourceException
+    {
+        return songsDataSource.getSong(getLinkedRepository(repoLocalId), songId);
     }
 }

@@ -25,7 +25,7 @@ public abstract class RepositoryController
 
     public static void fetchLinkedRepositories(FetchLinkedRepositoriesListener listener)
     {
-        listener.onLinkedRepositoriesAvailable(new DataController().getLinkedRepositories());
+        listener.onLinkedRepositoriesAvailable(DataController.getSingleton().getLinkedRepositories());
     }
 
     public interface AddRepositoryListener
@@ -95,7 +95,7 @@ public abstract class RepositoryController
 
     static private int getNextRepoLocalId()
     {
-        List<Repository> linkedRepositories = new DataController().getLinkedRepositories();
+        List<Repository> linkedRepositories = DataController.getSingleton().getLinkedRepositories();
 
         int nextId = 0;
         boolean idUsed;
@@ -119,7 +119,7 @@ public abstract class RepositoryController
 
     private static boolean saveNewRepository(Repository newRepository)
     {
-        return new DataController().saveNewRepository(newRepository);
+        return DataController.getSingleton().saveNewRepository(newRepository);
     }
 
     private static boolean isDomainValid(String domain)

@@ -26,9 +26,7 @@ public class ArtistsViewPresenter implements IArtistsViewPresenter, DataControll
     @Override
     public void fetchArtists()
     {
-        DataController dataController = new DataController();
-
-        dataController.fetchAllArtists(this);
+        DataController.getSingleton().fetchAllArtists(this);
     }
 
     @Override

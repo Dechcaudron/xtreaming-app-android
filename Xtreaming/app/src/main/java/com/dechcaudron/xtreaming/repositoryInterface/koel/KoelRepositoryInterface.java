@@ -9,6 +9,7 @@ import com.dechcaudron.koel.api.objects.KoelAuthenticationToken;
 import com.dechcaudron.koel.api.objects.MediaInfo;
 import com.dechcaudron.koel.api.utils.AuthenticationUtils;
 import com.dechcaudron.koel.api.utils.MediaUtils;
+import com.dechcaudron.koel.api.utils.StreamingUtils;
 import com.dechcaudron.xtreaming.controller.LogController;
 import com.dechcaudron.xtreaming.model.Album;
 import com.dechcaudron.xtreaming.model.Artist;
@@ -20,6 +21,8 @@ import com.dechcaudron.xtreaming.repositoryInterface.RepositoryInterfaceExceptio
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,7 +138,7 @@ public class KoelRepositoryInterface implements RepositoryInterface
     public List<Song> getSongs(Repository repository) throws RepositoryInterfaceException, IOException
     {
         List<com.dechcaudron.koel.api.objects.Song> apiSongs = getMediaInfo(repository).getAllSongs();
-        
+
         List<Song> allSongs = new ArrayList<>(apiSongs.size());
 
         for (com.dechcaudron.koel.api.objects.Song apiSong : apiSongs)
@@ -146,12 +149,33 @@ public class KoelRepositoryInterface implements RepositoryInterface
         return allSongs;
     }
 
+    @Override
+    public URI getSongURI(Repository repository, Song song) throws RepositoryInterfaceException
+    {
+        try
+        {
+            KoelAuthenticationToken authToken = buildKoelAuthToken(repository.getAuthenticationToken());
+            return StreamingUtils.getStreamingURL(buildURL(repository.getDomainURL(), repository.getPort(), repository.requiresSSL()), authToken, song.getId()).toURI();
+        } catch (MalformedURLException e)
+        {
+            LogController.LOGE(TAG, "Malformed URL for domain " + repository.getDomainURL(), e);
+        } catch (KoelApiException e)
+        {
+            LogController.LOGE(TAG, "Could not get song URI for repository " + repository.toString() + " and song " + song.toString(), e);
+        } catch (URISyntaxException e)
+        {
+            LogController.LOGE(TAG, "URI Syntax exception", e);
+        }
+
+        throw new RepositoryInterfaceException("Failed to get song URI");
+    }
+
     private MediaInfo getMediaInfo(Repository repository) throws IOException, RepositoryInterfaceException
     {
         try
         {
             URL serverURL = buildURL(repository.getDomainURL(), repository.getPort(), repository.requiresSSL());
-            return MediaUtils.getMediaInfo(serverURL, new KoelAuthenticationToken(repository.getAuthenticationToken().getSerialized()));
+            return MediaUtils.getMediaInfo(serverURL, buildKoelAuthToken(repository.getAuthenticationToken()));
 
         } catch (MalformedURLException e)
         {
@@ -163,6 +187,18 @@ public class KoelRepositoryInterface implements RepositoryInterface
         }
 
         throw new RepositoryInterfaceException("Could not get media info");
+    }
+
+    private KoelAuthenticationToken buildKoelAuthToken(IRepositoryAuthToken authToken) throws RepositoryInterfaceException
+    {
+        try
+        {
+            return new KoelAuthenticationToken(authToken.getSerialized());
+        } catch (KoelApiException e)
+        {
+            LogController.LOGE(TAG, "Could not build KoelAuthenticationToken from " + authToken.getSerialized());
+            throw new RepositoryInterfaceException("Could not build custom authentication token");
+        }
     }
 
     private URL buildURL(String domain, int port, boolean useHttps) throws MalformedURLException

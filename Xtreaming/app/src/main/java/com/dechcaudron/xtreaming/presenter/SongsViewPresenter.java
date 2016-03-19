@@ -3,6 +3,7 @@ package com.dechcaudron.xtreaming.presenter;
 import android.os.Bundle;
 
 import com.dechcaudron.xtreaming.controller.LogController;
+import com.dechcaudron.xtreaming.controller.MediaPlayController;
 import com.dechcaudron.xtreaming.controller.data.DataController;
 import com.dechcaudron.xtreaming.model.Song;
 import com.dechcaudron.xtreaming.presenter.interfaces.ISongsView;
@@ -48,7 +49,7 @@ public class SongsViewPresenter implements ISongsViewPresenter, DataController.O
 
     private void fetchSongs(int repoLocalId, String artistName, String albumName)
     {
-        new DataController().fetchSongs(repoLocalId, artistName, albumName, this);
+        DataController.getSingleton().fetchSongs(repoLocalId, artistName, albumName, this);
     }
 
     private void fetchSongs(int repoLocalId, String artistName)
@@ -59,6 +60,13 @@ public class SongsViewPresenter implements ISongsViewPresenter, DataController.O
     private void fetchSongs(int repoLocalId)
     {
         throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public void playSong(Song song)
+    {
+        LogController.LOGD(TAG, "Playing song " + song.toDebugString());
+        MediaPlayController.playSong(song);
     }
 
     @Override

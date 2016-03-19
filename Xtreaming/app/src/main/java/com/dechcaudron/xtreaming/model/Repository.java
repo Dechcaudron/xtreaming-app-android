@@ -57,4 +57,10 @@ public class Repository
     {
         return authenticationToken;
     }
+
+    @Override
+    public String toString()
+    {
+        return "[LocalId " + repoLocalId + "] [RepoType " + repoTypeCode + "] " + domainURL + ":" + port +" "+ (requireSSL ? "" : "NO ") + "SSL Username: " + username;
+    }
 }

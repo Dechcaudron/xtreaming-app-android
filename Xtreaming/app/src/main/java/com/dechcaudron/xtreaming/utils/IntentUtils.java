@@ -10,6 +10,7 @@ public abstract class IntentUtils
     private static final String REPO_LOCAL_ID_INTENT_KEY = "REPO_LOCAL_ID_IK";
     private static final String ARTIST_INTENT_KEY = "ARTIST_IK";
     private static final String ALBUM_INTENT_KEY = "ALBUM_IK";
+    private static final String SONG_ID_INTENT_KEY = "SONG_ID_IK";
 
     public static void specifyRepoLocalId(Intent intent, int repoLocalId)
     {
@@ -54,6 +55,21 @@ public abstract class IntentUtils
     public static String getSpecifiedAlbum(Bundle bundle)
     {
         return bundle.getString(ALBUM_INTENT_KEY);
+    }
+
+    public static void specifySongId(Intent intent, String songId)
+    {
+        intent.putExtra(SONG_ID_INTENT_KEY, songId);
+    }
+
+    public static String getSpecifiedSongId(Intent intent)
+    {
+        return intent.getStringExtra(SONG_ID_INTENT_KEY);
+    }
+
+    public static String getSpecifiedSongId(Bundle bundle)
+    {
+        return bundle.getString(SONG_ID_INTENT_KEY);
     }
 
 }

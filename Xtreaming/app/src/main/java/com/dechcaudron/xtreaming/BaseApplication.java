@@ -2,6 +2,7 @@ package com.dechcaudron.xtreaming;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.dechcaudron.xtreaming.controller.LogController;
@@ -18,6 +19,11 @@ public class BaseApplication extends Application
     {
         super.onCreate();
         singleton = this;
+    }
+
+    public static Context getContext()
+    {
+        return singleton.getApplicationContext();
     }
 
     public static String getStringPref(String prefKey, String defaultValue)

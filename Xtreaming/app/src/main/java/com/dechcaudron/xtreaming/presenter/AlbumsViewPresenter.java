@@ -26,7 +26,7 @@ public class AlbumsViewPresenter implements IAlbumsViewPresenter, DataController
     {
         this.view = view;
 
-        dataController = new DataController();
+        dataController = DataController.getSingleton();
         this.parentActivity = parentActivity;
 
         checkBundleContents(startingBundle);

@@ -37,9 +37,19 @@ public class Song
         return name;
     }
 
+    public String getId()
+    {
+        return id;
+    }
+
     @Override
     public String toString()
     {
         return getName();
+    }
+
+    public String toDebugString()
+    {
+        return "[" + getId() + "] " + getName() + " -> " + getAlbumName() + " -> " + getArtistName();
     }
 }

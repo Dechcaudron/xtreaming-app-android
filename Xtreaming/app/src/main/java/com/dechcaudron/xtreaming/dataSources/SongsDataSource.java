@@ -20,9 +20,22 @@ public class SongsDataSource
 
     }
 
+    public List<Song> getSongs(Repository repository) throws DataSourceException
+    {
+        RepositoryInterface repoInterface = getRepositoryInterface(repository);
+        try
+        {
+            return repoInterface.getSongs(repository);
+        } catch (Exception e)
+        {
+            LogController.LOGE(TAG, "Could not get songs from repository " + repository, e);
+            throw new DataSourceException();
+        }
+    }
+
     public List<Song> getSongs(Repository repository, String artistName, String albumName) throws DataSourceException
     {
-        RepositoryInterface repoInterface = RepositoryInterfaceFactory.getInterface(RepoTypes.getRepoType(repository.getRepoTypeCode()));
+        RepositoryInterface repoInterface = getRepositoryInterface(repository);
         try
         {
             return repoInterface.getSongs(repository, artistName, albumName);
@@ -31,5 +44,23 @@ public class SongsDataSource
             LogController.LOGE(TAG, "", e);
             throw new ServerDataSourceException();
         }
+    }
+
+    public Song getSong(Repository repository, String songId) throws DataSourceException
+    {
+        List<Song> songs = getSongs(repository);
+
+        for (Song song : songs)
+        {
+            if (song.getId().equals(songId))
+                return song;
+        }
+
+        throw new DataSourceException();
+    }
+
+    private RepositoryInterface getRepositoryInterface(Repository repository)
+    {
+        return RepositoryInterfaceFactory.getInterface(RepoTypes.getRepoType(repository.getRepoTypeCode()));
     }
 }

@@ -6,6 +6,7 @@ import com.dechcaudron.xtreaming.model.Repository;
 import com.dechcaudron.xtreaming.model.Song;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 public interface RepositoryInterface
@@ -23,4 +24,6 @@ public interface RepositoryInterface
     List<Song> getSongs(Repository repository, String artistName) throws RepositoryInterfaceException, IOException;
 
     List<Song> getSongs(Repository repository) throws RepositoryInterfaceException, IOException;
+
+    URI getSongURI(Repository repository, Song song) throws RepositoryInterfaceException;
 }

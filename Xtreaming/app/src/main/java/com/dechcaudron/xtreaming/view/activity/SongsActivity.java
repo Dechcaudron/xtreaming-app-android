@@ -2,6 +2,8 @@ package com.dechcaudron.xtreaming.view.activity;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -13,7 +15,7 @@ import com.dechcaudron.xtreaming.view.interfaces.ISongsViewPresenter;
 
 import java.util.List;
 
-public class SongsActivity extends ListActivity implements ISongsView
+public class SongsActivity extends ListActivity implements ISongsView, AdapterView.OnItemClickListener
 {
     private ISongsViewPresenter presenter;
     private ArrayAdapter<Song> songsAdapter;
@@ -27,6 +29,14 @@ public class SongsActivity extends ListActivity implements ISongsView
         setListAdapter(songsAdapter);
 
         presenter = new SongsViewPresenter(this, getIntent().getExtras());
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        getListView().setOnItemClickListener(this);
     }
 
     @Override
@@ -54,5 +64,11 @@ public class SongsActivity extends ListActivity implements ISongsView
                 Toast.makeText(SongsActivity.this, errorResId, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    {
+        presenter.playSong(songsAdapter.getItem(position));
     }
 }
