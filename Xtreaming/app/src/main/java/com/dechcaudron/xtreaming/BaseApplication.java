@@ -2,7 +2,6 @@ package com.dechcaudron.xtreaming;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.dechcaudron.xtreaming.controller.LogController;
@@ -43,6 +42,4 @@ public class BaseApplication extends Application
     {
         return singleton.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
-
-
 }

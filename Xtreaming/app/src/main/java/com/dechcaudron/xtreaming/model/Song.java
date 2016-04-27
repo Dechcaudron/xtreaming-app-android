@@ -42,6 +42,11 @@ public class Song
         return id;
     }
 
+    public boolean isLocal()
+    {
+        return repoLocalId == 0;
+    }
+
     @Override
     public String toString()
     {

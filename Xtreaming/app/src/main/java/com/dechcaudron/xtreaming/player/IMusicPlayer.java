@@ -1,8 +1,18 @@
 package com.dechcaudron.xtreaming.player;
 
-import java.net.URI;
+import com.dechcaudron.xtreaming.model.Song;
 
 public interface IMusicPlayer
 {
-    void queueSong(URI songURI);
+    boolean queueSong(Song song);
+
+    boolean clearQueue();
+
+    boolean pause();
+
+    boolean play();
+
+    boolean stop();
+
+    Song getCurrentSong();
 }

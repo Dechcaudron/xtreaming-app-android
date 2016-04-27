@@ -16,17 +16,34 @@ public abstract class MediaPlayController
             @Override
             public void run()
             {
-                Intent intent = getServiceIntent();
+                Intent intent = getServiceIntent(MediaPlayService.Actions.QUEUE);
                 IntentUtils.specifyRepoLocalId(intent, song.getRepoLocalId());
                 IntentUtils.specifySongId(intent, song.getId());
                 BaseApplication.getContext().startService(intent);
             }
         }).start();
-
     }
 
-    private static Intent getServiceIntent()
+    public static void pauseMedia()
     {
-        return new Intent(BaseApplication.getContext(), MediaPlayService.class);
+        Intent intent = getServiceIntent(MediaPlayService.Actions.PAUSE);
+        BaseApplication.getContext().startService(intent);
+    }
+
+    public static void playMedia()
+    {
+        Intent intent = getServiceIntent(MediaPlayService.Actions.PLAY);
+        BaseApplication.getContext().startService(intent);
+    }
+
+    public static void stopMedia()
+    {
+        Intent intent = getServiceIntent(MediaPlayService.Actions.STOP);
+        BaseApplication.getContext().startService(intent);
+    }
+
+    private static Intent getServiceIntent(MediaPlayService.Actions action)
+    {
+        return new Intent(BaseApplication.getContext(), MediaPlayService.class).putExtra(MediaPlayService.ACTION_IK, action.getAction());
     }
 }

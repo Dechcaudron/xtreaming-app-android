@@ -26,6 +26,15 @@
         <activity android:name=".view.activity.SongsActivity"/>
 
         <service android:name=".service.MediaPlayService"/>
+
+        <receiver android:name="com.dechcaudron.xtreaming.notifications.NotificationInteractor">
+            <intent-filter>
+                <action android:name="com.dechcaudron.xtreaming.notifications.PAUSE"/>
+                <action android:name="com.dechcaudron.xtreaming.notifications.PLAY"/>
+                <action android:name="com.dechcaudron.xtreaming.notifications.NEXT"/>
+                <action android:name="com.dechcaudron.xtreaming.notifications.STOP"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
