@@ -64,6 +64,11 @@ public class DataController
         return repositoriesDataSource.saveNewRepository(repository);
     }
 
+    public boolean removeRepository(int repoLocalId)
+    {
+        return repositoriesDataSource.removeRepository(repoLocalId);
+    }
+
     public interface OnArtistsAvailableListener
     {
         void onArtistsAvailable(List<Artist> artists);

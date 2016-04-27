@@ -93,6 +93,31 @@ public abstract class RepositoryController
         }
     }
 
+    public interface OnRepositoryRemovedListener
+    {
+        void onRepositoryRemoved();
+
+        void onRepositoryRemoveError(int errorResId);
+    }
+
+    public static void removeRepository(final Repository repository, final OnRepositoryRemovedListener listener)
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (DataController.getSingleton().removeRepository(repository.getRepoLocalId()))
+                {
+                    listener.onRepositoryRemoved();
+                } else
+                {
+                    listener.onRepositoryRemoveError(R.string.remove_repo_error);
+                }
+            }
+        }).start();
+    }
+
     static private int getNextRepoLocalId()
     {
         List<Repository> linkedRepositories = DataController.getSingleton().getLinkedRepositories();

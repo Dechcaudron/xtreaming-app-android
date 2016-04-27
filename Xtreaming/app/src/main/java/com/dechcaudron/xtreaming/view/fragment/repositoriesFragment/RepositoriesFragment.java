@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,7 +21,7 @@ import com.dechcaudron.xtreaming.view.interfaces.IRepositoriesViewPresenter;
 
 import java.util.List;
 
-public class RepositoriesFragment extends ListFragment implements IRepositoriesView, View.OnClickListener, DialogInterface.OnDismissListener
+public class RepositoriesFragment extends ListFragment implements IRepositoriesView, View.OnClickListener, DialogInterface.OnDismissListener, AdapterView.OnItemClickListener
 {
     private static final String TAG = LogController.makeTag(RepositoriesFragment.class);
 
@@ -45,12 +46,13 @@ public class RepositoriesFragment extends ListFragment implements IRepositoriesV
         repositoriesListView = getListView();
         adapter = new RepositoriesListAdapter(getActivity());
         repositoriesListView.setAdapter(adapter);
+        repositoriesListView.setOnItemClickListener(this);
 
         addRepoButton = getView().findViewById(R.id.addRepoButton);
 
         addRepoButton.setOnClickListener(this);
 
-        presenter = new RepositoriesViewPresenter(this);
+        presenter = new RepositoriesViewPresenter(getActivity(), this);
     }
 
     @Override
@@ -104,6 +106,12 @@ public class RepositoriesFragment extends ListFragment implements IRepositoriesV
     }
 
     @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    {
+        removeRepository(adapter.getItem(position));
+    }
+
+    @Override
     public void onDismiss(DialogInterface dialog)
     {
         presenter.onResume();
@@ -114,5 +122,10 @@ public class RepositoriesFragment extends ListFragment implements IRepositoriesV
         AddRepositoryDialog dialog = new AddRepositoryDialog(getActivity());
         dialog.setOnDismissListener(this);
         dialog.show();
+    }
+
+    private void removeRepository(Repository repository)
+    {
+        presenter.removeRepository(repository);
     }
 }

@@ -22,7 +22,25 @@ public class RepositoriesDataSource
 
     public boolean saveNewRepository(Repository repository)
     {
-        return storeRepositoryInPreferences(repository);
+        List<Repository> repositories = getLinkedRepositories();
+        repositories.add(repository);
+        return storeRepositoriesInPreferences(repositories);
+    }
+
+    public boolean removeRepository(int repositoryLocalId)
+    {
+        List<Repository> repositories = getLinkedRepositories();
+
+        for (int i = 0; i < repositories.size(); ++i)
+        {
+            if (repositories.get(i).getRepoLocalId() == repositoryLocalId)
+            {
+                repositories.remove(i);
+                break;
+            }
+        }
+
+        return storeRepositoriesInPreferences(repositories);
     }
 
     private static final String LINKED_REPOSITORIES_PREFS_KEY = "linkedRepos";
@@ -48,23 +66,21 @@ public class RepositoriesDataSource
      *      REPOLOCALID___REPOTYPE___DOMAINURL___PORT___REQUIRESSL(0,1)___USERNAME___AUTHENTICATIONTOKEN
      */
 
-    private boolean storeRepositoryInPreferences(Repository repository)
+    private boolean storeRepositoriesInPreferences(List<Repository> repositories)
     {
-        String serializedRepository = serializeRepository(repository);
+        String preferenceData = "";
 
-        StringBuilder builder = new StringBuilder(serializedRepository.length());
-
-        String savedPreference = getLinkedRepositoriesPreference();
-
-        if (!savedPreference.isEmpty())
+        for (Repository repo : repositories)
         {
-            builder.append(getLinkedRepositoriesPreference());
-            builder.append(LINKED_REPOSITORIES_SEPARATION_STRING);
+            if (!preferenceData.isEmpty())
+            {
+                preferenceData += LINKED_REPOSITORIES_SEPARATION_STRING;
+            }
+
+            preferenceData += serializeRepository(repo);
         }
 
-        builder.append(serializedRepository);
-
-        return saveLinkedRepositoriesPreference(builder.toString());
+        return saveLinkedRepositoriesPreference(preferenceData);
     }
 
     private String serializeRepository(Repository repository)
